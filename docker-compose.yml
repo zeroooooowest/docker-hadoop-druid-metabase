@@ -1,0 +1,69 @@
+version: '3.5'
+
+services:
+  druid-hadoop-demo:
+    build:
+      context: ./docker-hadoop
+    image: youngseokim/druid-hadoop-demo:0.0.6
+    container_name: druid-hadoop-demo
+    networks:
+      - druid_net
+    volumes:
+      - /tmp/shared:/shared
+    ports:
+      - "2049:2049"
+      - "2122:2122"
+      - "8020:8020"
+      - "8021:8021"
+      - "8030:8030"
+      - "8031:8031"
+      - "8032:8032"
+      - "8033:8033"
+      - "8040:8040"
+      - "8042:8042"
+      - "8088:8088"
+      - "8443:8443"
+      - "9000:9000"
+      - "10020:10020"
+      - "19888:19888"
+      - "34455:34455"
+      - "49707:49707"
+      - "50010:50010"
+      - "50020:50020"
+      - "50030:50030"
+      - "50060:50060"
+      - "50070:50070"
+      - "50075:50075"
+      - "50090:50090"
+      - "51111:51111"
+  druid-demo:
+    build:
+      context: ./docker-druid
+    image: youngseokim/druid-demo:0.0.5
+    container_name: druid-demo
+    networks:
+      - druid_net
+    volumes:
+      - /tmp/shared:/shared
+    ports:
+      - "1527:1527"
+      - "8081:8081"
+      - "8082:8082"
+      - "8083:8083"
+      - "8090:8090"
+      - "8888:8888"
+    depends_on:
+      - druid-hadoop-demo
+  metabase:
+    image: metabase/metabase
+    container_name: metabase
+    environment:
+      - JAVA_TIMEZONE=Asia/Seoul
+    networks:
+      - druid_net
+    ports:
+      - "3000:3000"
+
+networks:
+  druid_net:
+    driver: bridge
